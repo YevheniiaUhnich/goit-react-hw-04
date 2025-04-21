@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
@@ -10,8 +10,9 @@ import { fetchGalleryWithPhoto } from "./Gallery-api";
 
 function App() {
   const [gallery, setGallery] = useState([]);
-  // const [query, setQuery] = useState("");
-  // const [page, setPage];
+  const [photo, setPhoto] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -27,20 +28,45 @@ function App() {
     setSelectedImage(photo);
     openModal();
   };
-  const handleSearch = async (photo) => {
-    try {
-      setGallery([]);
-      setErrorMessage(false);
-      setLoading(true);
-      const data = await fetchGalleryWithPhoto(photo);
-      setGallery(data);
-    } catch (error) {
-      console.error("Fetch error", error);
-      setErrorMessage(true);
-    } finally {
-      setLoading(false);
-    }
+
+  const handleSearch = (newPhoto) => {
+    setPhoto(newPhoto);
+    setGallery([]);
+    setPage(1);
   };
+
+  useEffect(() => {
+    if (!photo) return;
+
+    const abortController = new AbortController();
+
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setErrorMessage(false);
+
+        const data = await fetchGalleryWithPhoto(
+          photo,
+          page,
+          abortController.signal
+        );
+        console.log("Fetched data:", data);
+
+        setGallery((prev) => [...prev, ...data.photos]);
+        setTotalPages(data.totalPages);
+      } catch (error) {
+        console.error("Fetch error", error);
+        setErrorMessage(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+
+    return () => {
+      abortController.abort();
+    };
+  }, [photo, page]);
 
   return (
     <>
@@ -54,7 +80,10 @@ function App() {
       <ImageGallery sendImages={gallery} handleClick={handleClick} />
       {loading && <Loader />}
       {errorMessage && <ErrorMessage />}
-      <LoadMoreBtn />
+
+      {gallery.length > 0 && page < totalPages && (
+        <LoadMoreBtn setPage={setPage} totalPages={totalPages} page={page} />
+      )}
     </>
   );
 }
