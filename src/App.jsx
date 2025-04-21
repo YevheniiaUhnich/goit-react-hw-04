@@ -53,7 +53,7 @@ function App() {
         console.log("Fetched data:", data);
 
         setGallery((prev) => [...prev, ...data.photos]);
-        setTotalPages(data.totalPages);
+        setTotalPages(Math.min(data.totalPages, 15));
       } catch (error) {
         console.error("Fetch error", error);
         setErrorMessage(true);

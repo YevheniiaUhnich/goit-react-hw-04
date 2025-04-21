@@ -6,8 +6,8 @@ const LoadMoreBtn = ({ setPage, totalPages, page }) => {
       <button onClick={() => setPage(page + 1)} className={s.loadMoreBtn}>
         Load more
       </button>
-      <span className={s.spanEffect}>Page: {page}</span>
-      <span className={s.spanEffect}>Total Page: {totalPages}</span>
+      <span className={s.pageNumber}>Page: {page}</span>
+      <span className={s.pageNumber}>Total Page: {totalPages}</span>
     </div>
   );
 };
