@@ -11,7 +11,7 @@ import { fetchGalleryWithPhoto } from "./Gallery-api";
 function App() {
   const [gallery, setGallery] = useState([]);
   // const [query, setQuery] = useState("");
-  const [page, setPage];
+  // const [page, setPage];
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(false);
