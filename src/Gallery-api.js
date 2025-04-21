@@ -1,11 +1,13 @@
 import axios from "axios";
 
-const API_KEY = "Ud4YJgNphxLzVWMXKSbOYiBwSTEIqFbfAwdnpOzV7M4";
+const apiKey = "Ud4YJgNphxLzVWMXKSbOYiBwSTEIqFbfAwdnpOzV7M4";
 
-axios.defaults.baseURL =
-  "https://images.unsplash.com/face-springmorning.jpg?q=75&fm=jpg&w=400&fit=max?737919=Ud4YJgNphxLzVWMXKSbOYiBwSTEIqFbfAwdnpOzV7M4";
+axios.defaults.baseURL = "https://api.unsplash.com";
 
-export const fetchGalleryWithPhoto = async (photo) => {
-  const response = await axios.get(`/search?query=${photo}`);
-  return response.data.hits;
+export const fetchGalleryWithPhoto = async (photo, page) => {
+  const response = await axios.get(
+    `https://api.unsplash.com/search/photos/?client_id=${apiKey}&per_page=5&query=${photo}&page=${page}`
+    // { signal }
+  );
+  return response.data.results;
 };
