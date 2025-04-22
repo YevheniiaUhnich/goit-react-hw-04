@@ -2,28 +2,35 @@ import s from "./SearchBar.module.css";
 import { FcSearch } from "react-icons/fc";
 import toast from "react-hot-toast";
 
+const initialValues = {
+  query: "",
+};
+
 const SearchBar = ({ onSubmit }) => {
   const handleSubmit = (evt) => {
     evt.preventDefault();
     const form = evt.target;
-    const photo = form.elements.photo.value.trim();
+    const query = form.elements.query.value.trim();
 
-    if (!photo) {
+    if (!query) {
       toast.error("The field cannot be empty");
       return;
     }
-    onSubmit(photo);
+    onSubmit(query);
     form.reset();
   };
   return (
     <header className={s.searchBarStyle}>
-      <form onSubmit={handleSubmit} className={s.form}>
+      <form
+        onSubmit={handleSubmit}
+        initialValues={initialValues}
+        className={s.form}>
         <div className={s.containerInput}>
           <FcSearch className={s.iconInput} />
           <input
             className={s.input}
             type="text"
-            name="photo"
+            name="query"
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"

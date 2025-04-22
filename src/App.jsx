@@ -10,13 +10,13 @@ import { fetchGalleryWithPhoto } from "./Gallery-api";
 
 function App() {
   const [gallery, setGallery] = useState([]);
-  const [photo, setPhoto] = useState("");
+  const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null); // modal
+  const [selectedImage, setSelectedImage] = useState(null);
 
   function openModal() {
     setIsOpen(true);
@@ -24,19 +24,19 @@ function App() {
   function closeModal() {
     setIsOpen(false);
   }
-  const handleClick = (photo) => {
-    setSelectedImage(photo);
+  const handleClick = (query) => {
+    setSelectedImage(query);
     openModal();
   };
 
-  const handleSearch = (newPhoto) => {
-    setPhoto(newPhoto);
+  const handleSearch = (newQuery) => {
+    setQuery(newQuery);
     setGallery([]);
     setPage(1);
   };
 
   useEffect(() => {
-    if (!photo) return;
+    if (!query) return;
 
     const abortController = new AbortController();
 
@@ -46,13 +46,13 @@ function App() {
         setErrorMessage(false);
 
         const data = await fetchGalleryWithPhoto(
-          photo,
+          query,
           page,
           abortController.signal
         );
         console.log("Fetched data:", data);
 
-        setGallery((prev) => [...prev, ...data.photos]);
+        setGallery((prev) => [...prev, ...data.query]);
         setTotalPages(Math.min(data.totalPages, 15));
       } catch (error) {
         console.error("Fetch error", error);
@@ -66,7 +66,7 @@ function App() {
     return () => {
       abortController.abort();
     };
-  }, [photo, page]);
+  }, [query, page]);
 
   return (
     <>
@@ -75,14 +75,14 @@ function App() {
       <ImageModal
         selectedImage={selectedImage}
         isOpen={modalIsOpen}
-        onWishClose={closeModal}
+        onRequestClose={closeModal}
       />
       <ImageGallery sendImages={gallery} handleClick={handleClick} />
       {loading && <Loader />}
       {errorMessage && <ErrorMessage />}
 
       {gallery.length > 0 && page < totalPages && (
-        <LoadMoreBtn setPage={setPage} totalPages={totalPages} page={page} />
+        <LoadMoreBtn setPage={setPage} page={page} />
       )}
     </>
   );

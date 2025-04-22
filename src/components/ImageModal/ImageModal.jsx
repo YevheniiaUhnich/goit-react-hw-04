@@ -1,7 +1,7 @@
 import Modal from "react-modal";
 const styles = {
   overlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.75)", // напівпрозорий фон
+    backgroundColor: "rgba(0, 0, 0, 0.75)",
     zIndex: 1000,
   },
   content: {
@@ -9,25 +9,28 @@ const styles = {
     left: "50%",
     right: "auto",
     bottom: "auto",
-    marginRight: "-50%",
+    maxWidth: "90wv",
+    width: "auto",
+    maxHeight: "90hv",
     transform: "translate(-50%, -50%)",
     padding: "20px",
     borderRadius: "12px",
-    border: "none",
-    background: "#fff",
-    maxWidth: "800px",
-    width: "90%",
-    maxHeight: "90vh",
     overflow: "auto",
-    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.2)",
+    boxShadow: "0 5px 10px rgba(0, 0, 0, 0.2)",
   },
 };
 Modal.setAppElement("#root");
 
-const ImageModal = ({ isOpen, onWishClose, selectedImage }) => {
+const ImageModal = ({ isOpen, onRequestClose, selectedImage }) => {
   return (
-    <Modal style={styles} isOpen={isOpen} onWishClose={onWishClose}>
-      {selectedImage && <img src={selectedImage} alt="Selected" />}
+    <Modal style={styles} isOpen={isOpen} onRequestClose={onRequestClose}>
+      {selectedImage && (
+        <img
+          src={selectedImage.urls?.small}
+          alt={selectedImage.alt_description || "Image"}
+          style={{ maxWidth: "100%", height: "auto" }}
+        />
+      )}
     </Modal>
   );
 };

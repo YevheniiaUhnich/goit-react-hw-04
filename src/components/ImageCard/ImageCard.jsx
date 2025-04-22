@@ -5,7 +5,7 @@ const ImageCard = ({ handleClick, sendImg }) => {
   return (
     <div className={s.imageCard}>
       <img
-        onClick={() => handleClick()}
+        onClick={() => handleClick(sendImg)}
         src={sendImg.urls.small}
         alt={sendImg.alt_description || "Image"}
         width={280}
